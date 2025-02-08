@@ -4,14 +4,14 @@
     "description": "Simple E-commerce App",
     "main": "server/server.js",
     "scripts": {
-      "start": "node server/server.js",
-      "dev": "nodemon server/server.js"
+        "start": "node server/server.js",
+        "dev": "nodemon server/server.js"
     },
     "dependencies": {
-      "express": "^4.18.2"
+        "express": "^4.18.2",
+        "http-server": "^14.1.1"
     },
     "devDependencies": {
-      "nodemon": "^2.0.22"
+        "nodemon": "^2.0.22"
     }
-  }
-  
+}
