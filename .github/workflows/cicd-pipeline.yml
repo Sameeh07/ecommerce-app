@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Login to IBM Cloud
+        run: |
+          ibmcloud login --apikey HQJD22uUeVDbpk35kbKcPZ2Ph9LmzY1cn6iKWdj_w0wB -r global
+          ibmcloud cr login
+
+      - name: Build and Push Frontend Docker Image
+        run: |
+          docker build -t us.icr.io/e-commerceapp/frontend-app:1.1 ./public
+          docker push us.icr.io/e-commerceapp/frontend-app:1.1
+
+      - name: Build and Push Backend Docker Image
+        run: |
+          docker build -t us.icr.io/e-commerceapp/backend-app:1.0 ./server
+          docker push us.icr.io/e-commerceapp/backend-app:1.0
+
+      - name: Deploy to Minikube (for local testing)
+        run: |
+          minikube start
+          kubectl apply -f kubernetes/frontend-deployment.yaml
+          kubectl apply -f kubernetes/backend-deployment.yaml
+
+      - name: Verify Deployments
+        run: |
+          kubectl get pods
+          kubectl get services
